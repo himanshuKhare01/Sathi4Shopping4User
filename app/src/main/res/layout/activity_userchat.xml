@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".Activity.UserChatActivity">
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:local="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorgrey"
+            android:minHeight="?attr/actionBarSize"
+            local:titleTextColor="@color/colorWhite">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/backbutton"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center|start"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_arrow_back_white_24dp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/queryImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="12sp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/message_query_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/sendlayout"
+        android:layout_below="@id/frame" />
+
+    <LinearLayout
+        android:id="@+id/sendlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite"
+        android:focusable="true"
+        android:gravity="bottom|center"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/send_image_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="3dp"
+            android:backgroundTint="@color/colorWhite"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            app:backgroundTint="@color/colorgrey"
+            app:fabCustomSize="40dp" />
+
+        <EditText
+            android:id="@+id/sendmessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/backgroundchat"
+            android:cursorVisible="true"
+            android:focusable="true"
+            android:gravity="start|center"
+            android:hint="@string/type_your_messsage"
+            android:inputType="textLongMessage"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <Button
+            android:id="@+id/sendBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/ic_send_white_24dp" />
+    </LinearLayout>
+</RelativeLayout>

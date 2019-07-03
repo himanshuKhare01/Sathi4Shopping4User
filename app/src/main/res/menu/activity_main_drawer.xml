@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group>
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_white_24dp"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_trending"
+            android:icon="@drawable/ic_whatshot_selected_24dp"
+            android:title="@string/trending" />
+        <item
+            android:id="@+id/nav_inbox"
+            android:icon="@drawable/ic_forum_white_24dp"
+            android:title="@string/inbox" />
+        <item
+            android:id="@+id/nav_wallet"
+            android:icon="@drawable/ic_account_balance_wallet_white_24dp"
+            android:title="@string/my_wallet" />
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/ic_bell"
+            android:title="@string/notification" />
+    </group>
+    <item android:title="@string/settings">
+        <menu>
+
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_account_circle_white_24dp"
+                android:title="@string/profile"/>
+            <item
+                android:id="@+id/nav_Address"
+                android:icon="@drawable/ic_location_on_white_24dp"
+                android:title="@string/address" />
+            <item
+                android:id="@+id/nav_phone"
+                android:icon="@drawable/ic_phone_white_24dp"
+                android:title="@string/ph_no" >
+            </item>
+        </menu>
+    </item>
+    <item android:title="@string/others_labels">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:title="@string/about_us" />
+            <item
+                android:id="@+id/nav_help"
+                android:title="@string/help_and_feedback" />
+            <item
+                android:id="@+id/nav_privacy"
+                android:title="@string/privacy_policy"/>
+            <item
+                android:id="@+id/terms"
+                android:title="@string/terms_and_conditions"/>
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,64 @@
+{
+  "project_info": {
+    "project_number": "951823575299",
+    "firebase_url": "https://sathi4shopping-9ca9f.firebaseio.com",
+    "project_id": "sathi4shopping-9ca9f",
+    "storage_bucket": "sathi4shopping-9ca9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951823575299:android:50476ca8041ca466",
+        "android_client_info": {
+          "package_name": "com.sathi4shopping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951823575299-s3q7au8gbc2hav0shth2plupcmtvh4r7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sathi4shopping",
+            "certificate_hash": "3d8aa363e2c0303857e0a199579bef75b44485bf"
+          }
+        },
+        {
+          "client_id": "951823575299-t40i03e0igkgr97guiv44o7rnegicjrp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sathi4shopping",
+            "certificate_hash": "67a1840f0a5a18c203e61a273f07cbc817e896dc"
+          }
+        },
+        {
+          "client_id": "951823575299-neidps2jml4to9lsmns2gthuqk65ho0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVPznTSsudrzTNSm795mu2LWLX0OLPL2c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951823575299-ehoadpaigu9a04hi0g0jmb5kl3n3fdth.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-6072520695108998~6367469519"
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorWhite"
+    android:layout_height="match_parent"
+    tools:context=".Activity.CoinsHistory">
+    <ImageView
+        android:id="@+id/coins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_coins"
+        android:layout_centerInParent="true"
+        tools:ignore="ContentDescription" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/your_rewards_history_nwill_appear_here"
+        android:layout_below="@id/coins"
+        android:layout_centerHorizontal="true"
+        android:textSize="14sp"
+        android:layout_marginTop="50dp"/>
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar_coins"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color4"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/coinsHistoryRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/toolbar_coins"/>
+    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+        android:id="@+id/progressBarCoins"
+        android:layout_width="32dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/color4"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="32dp"/>
+</RelativeLayout>
