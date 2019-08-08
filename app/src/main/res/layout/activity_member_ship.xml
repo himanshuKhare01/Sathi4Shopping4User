@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".Activity.MemberShipActivity">
+
+    <ImageView
+        android:id="@+id/home_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:srcCompat="@drawable/ic_left_arrow"
+        tools:ignore="ContentDescription" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cardView"
+        android:layout_below="@id/home_back">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/background_card_horizontal"
+                    android:orientation="vertical"
+                    android:padding="30dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Sathi4Shopping"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Welcome to Sathi4Shopping Membership"
+                        android:textColor="@color/colorGold"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_card_hr2"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="BECOME A S4S GOLD MEMBER &amp; Enjoy These Amazing Benefits"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView1"
+                                android:layout_width="match_parent"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardElevation="10dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTop="@drawable/ic_product"
+                                    android:gravity="center"
+                                    android:padding="10dp"
+                                    android:textStyle="bold"
+                                    android:text="Genuine Product" />
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView2"
+                                android:layout_width="match_parent"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardElevation="10dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTop="@drawable/ic_delivery_truck"
+                                    android:gravity="center"
+                                    android:padding="10dp"
+                                    android:textStyle="bold"
+                                    android:text="Free &amp; Fast Delivery" />
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView3"
+                                android:layout_width="match_parent"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardElevation="10dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTop="@drawable/ic_sale"
+                                    android:gravity="center"
+                                    android:textStyle="bold"
+                                    android:padding="10dp"
+                                    android:text="Early Access to Sales" />
+                            </androidx.cardview.widget.CardView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView4"
+                                android:layout_width="match_parent"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardElevation="10dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTop="@drawable/ic_customer_service"
+                                    android:gravity="center"
+                                    android:padding="10dp"
+                                    android:textStyle="bold"
+                                    android:text="Best Customer Support" />
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView5"
+                                android:layout_width="match_parent"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardElevation="10dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTop="@drawable/ic_return"
+                                    android:gravity="center"
+                                    android:padding="10dp"
+                                    android:textStyle="bold"
+                                    android:text="Easy Returns &amp; Refunds" />
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cardView6"
+                                android:layout_width="match_parent"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardElevation="10dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTop="@drawable/ic_notification"
+                                    android:gravity="center"
+                                    android:padding="10dp"
+                                    android:textStyle="bold"
+                                    android:text="Get latest Offers &amp; Deals" />
+                            </androidx.cardview.widget.CardView>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Earn &amp; Exchange for Rewards"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardView7"
+                            android:layout_width="match_parent"
+                            app:cardBackgroundColor="@color/colorWhite"
+                            app:cardElevation="10dp"
+                            android:layout_weight="1"
+                            android:layout_margin="10dp"
+                            app:cardCornerRadius="5dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:textStyle="bold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTop="@drawable/ic_get_money"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Shop Rs.0-1000 &amp; Earn 50 Coins Free" />
+                        </androidx.cardview.widget.CardView>
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardView8"
+                            android:layout_width="match_parent"
+                            app:cardBackgroundColor="@color/colorWhite"
+                            app:cardElevation="10dp"
+                            android:layout_weight="1"
+                            android:layout_margin="10dp"
+                            app:cardCornerRadius="5dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:textStyle="bold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTop="@drawable/ic_get_money"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Shop More than Rs.1000 &amp; Earn 100 Coins Free" />
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Coins Redemption"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardView9"
+                        android:layout_width="match_parent"
+                        app:cardBackgroundColor="@color/colorWhite"
+                        app:cardElevation="10dp"
+                        android:layout_margin="10dp"
+                        app:cardCornerRadius="5dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableTop="@drawable/ic_coins_2"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:padding="10dp"
+                            android:text="Redeemed 500 coins by Rs.100 S4S E-Gift Voucher" />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:freezesText="true"
+                android:padding="5dp"
+                android:text="Get Membership"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/real_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:text="\u20B9 499"
+                    android:textColor="@color/colorGold"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/real_price"
+                    android:background="@drawable/strike_line"
+                    android:text="1199"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/membership_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="#50A1FD"
+                    android:text="Pay"
+                    android:textColor="@color/colorWhite" />
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

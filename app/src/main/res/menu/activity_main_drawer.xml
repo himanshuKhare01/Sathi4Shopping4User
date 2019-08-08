@@ -43,6 +43,14 @@
             </item>
         </menu>
     </item>
+    <item android:title="New Features">
+        <menu>
+            <item
+                android:id="@+id/membership"
+                android:icon="@drawable/ic_account_circle_white_24dp"
+                android:title="Membership"/>
+        </menu>
+    </item>
     <item android:title="@string/others_labels">
         <menu>
             <item

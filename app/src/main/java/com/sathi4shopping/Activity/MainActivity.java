@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void checkForUpdate() {
+
         FirebaseDatabase.getInstance().getReference().child(VERSION_CODE_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -165,12 +166,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+
     }
 
     private int getCurrentVersionCode() {
@@ -749,6 +750,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.terms:
                 sendToTermsCondition();
                 break;
+            case R.id.membership:
+                startActivity(new Intent(this,MemberShipActivity.class));
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
