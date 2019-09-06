@@ -1,16 +1,18 @@
 package com.sathi4shopping.Fragment;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import nl.dionsegijn.konfetti.KonfettiView;
-import nl.dionsegijn.konfetti.models.Shape;
-import nl.dionsegijn.konfetti.models.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,6 +21,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sathi4shopping.Activity.CoinsHistory;
 import com.sathi4shopping.R;
+
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 public class WalletFragment extends Fragment {
     private static DatabaseReference referenceToUser;
     private TextView rewardsCount;
@@ -26,6 +32,7 @@ public class WalletFragment extends Fragment {
     private View view;
     private TextView coinshistory;
     private KonfettiView konfettiView;
+    private TextView textRedeem;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -36,6 +43,13 @@ public class WalletFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_wallet, container, false);
+        textRedeem = view.findViewById(R.id.redeem);
+        textRedeem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
         initializeData();
         showornot();
         setRewardsAmount();
@@ -46,6 +60,20 @@ public class WalletFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("How To Redeem");
+        builder.setMessage("Redeemed 500 coins by Rs.100 S4S E-Gift Voucher");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     private void setRewardsAmount() {
@@ -106,5 +134,4 @@ public class WalletFragment extends Fragment {
             }
         });
     }
-
 }

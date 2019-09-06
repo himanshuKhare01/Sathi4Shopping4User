@@ -31,6 +31,7 @@
         app:ntb_badge_position="right"
         app:ntb_badge_use_typeface="true"
         app:ntb_badged="true"
+        app:ntb_preview_colors="@array/preview"
         app:ntb_inactive_color="@color/default_color"
         app:ntb_scaled="true"
         app:ntb_tinted="true"

@@ -8,7 +8,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="otp"><![CDATA[<font color="#a3a3a3">We will send you an</font> <font color="#000000">One Time Password</font> <font color="#a3a3a3">on this mobile number</font>]]></string>
-    <string name="otp1"><![CDATA[<font color="#a3a3a3">Enter OTP send to </font> <font color="#000000">+91–9876–564–656</font>]]></string>
     <string name="phone_number">Phone Number</string>
     <string name="cancel">Cancel</string>
     <string name="update">Update</string>
@@ -17,8 +16,7 @@
     <string name="address">Address</string>
     <string name="coins_history">
         <u>Rewards History</u></string>
-    <string name="website">https://sathi4shopping.com/</string>
-    <string name="email">sathi4shopping@gmail.com</string>
+    <string name="website">https://sathi4shopping.in/</string>
     <string name="address_nverification">Address\nVerification</string>
     <string name="house_no">House No</string>
     <string name="done">Done</string>
@@ -29,10 +27,6 @@
     <string name="state">State</string>
     <string name="your_rewards_history_nwill_appear_here">Your Rewards History\nwill appear here</string>
     <string name="otp_verification">OTP Verification</string>
-    <string name="x2731">✱</string>
-    <string name="don_t_recieve_the_otp">Don\'t receive the OTP?</string>
-    <string name="re_check_phone_number">RE-CHECK PHONE NUMBER</string>
-    <string name="verify">VERIFY</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="_1234_567_890">1234–567–890</string>
     <string name="generate_otp">Generate OTP</string>
@@ -45,7 +39,6 @@
     <string name="trending">Trending</string>
     <string name="inbox">Inbox</string>
     <string name="my_wallet">My Wallet</string>
-    <string name="notification">Notification</string>
     <string name="settings">Settings</string>
     <string name="profile">Profile</string>
     <string name="others_labels">Other Labels</string>
@@ -63,8 +56,6 @@
     <string name="profile_updated">Profile updated</string>
     <string name="no_internet_connection">No internet connection try again after some time</string>
     <string name="profile_image_update">Profile image updated</string>
-    <string name="enter_correct_otp">Please enter a correct otp</string>
-    <string name="enter_otp_send">Enter the OTP Send</string>
     <string name="phone_verification_fail">Phone verification failed</string>
     <string name="otp_send">OTP is send</string>
     <string name="enter_correct_no">Please enter correct mobile no</string>
@@ -73,4 +64,11 @@
     <string name="uploaded">Uploaded</string>
     <string name="check_internet_connection">Check your internet connection</string>
     <string name="slow_internet_connection">Slow internet connection</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="e_shopping">E-Shopping</string>
+    <string name="how_to_redeem"><u>How to redeem?</u></string>
+    <string name="refer_this_app_in_your_contacts_and_after_installing_the_app_you_both_get_free_100_coins_use_it_for_next_shopping">Refer this app in your contacts and after installing the app you both get <b>free 100 coins</b> use it for next shopping.</string>
+
+
 </resources>

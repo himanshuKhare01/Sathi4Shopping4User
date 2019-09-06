@@ -10,8 +10,15 @@
     <color name="color2">#FF5722</color>
     <color name="color3">#72d3b4</color>
     <color name="color4">#FFD600</color>
-    <color name="color5">#E53935</color>
+    <array name="preview">
+        <item>#3b5998</item>
+        <item>#FF5722</item>
+        <item>#F2933A</item>
+        <item>#72d3b4</item>
+        <item>#FFD600</item>
+    </array>
     <color name="toolbar_address">#72D3B4</color>
     <color name="colorGold">#FFD700</color>
     <color name="colorChange">#EEFF41</color>
+    <color name="color5">#F2933A</color>
 </resources>

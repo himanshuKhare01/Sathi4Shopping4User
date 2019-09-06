@@ -8,27 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.textfield.TextInputEditText;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.core.view.GravityCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,12 +17,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,21 +44,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mingle.sweetpick.CustomDelegate;
 import com.mingle.sweetpick.SweetSheet;
-import com.sathi4shopping.BuildConfig;
 import com.sathi4shopping.Class.FCMService;
 import com.sathi4shopping.Class.GetCount;
 import com.sathi4shopping.Class.NetworkBroadcastReceiver;
+import com.sathi4shopping.Class.SendNotification;
 import com.sathi4shopping.Fragment.ChatFragment;
+import com.sathi4shopping.Fragment.EcommerceFragment;
 import com.sathi4shopping.Fragment.HomeFragment;
-import com.sathi4shopping.Fragment.NotificationFragment;
 import com.sathi4shopping.Fragment.TrendingFragment;
 import com.sathi4shopping.Fragment.WalletFragment;
 import com.sathi4shopping.R;
@@ -74,13 +70,16 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import devlight.io.library.ntb.NavigationTabBar;
+import ru.nikartm.support.ImageBadgeView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView tname;
@@ -114,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String tag = null;
     Uri resultUri = null;
     public static final String VERSION_CODE_KEY = "latest_app_version";
+    boolean isnewUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,19 +122,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setFindViewById();
         initializeFirebaseInstances();
         initUI();
+
         initializeDrawerLayout();
         setUserProfile();
         tag = getIntent().getStringExtra("tag");
         initAllBadge();
         initQueryBadge();
         updateQueryCount();
-        initNotificationBadge();
         initHomeBadge();
         initTrendingBadge();
+        initWalletBadge();
         if (FCMService.tag != null) {
             checkFragment(FCMService.tag);
         }
         checkForUpdate();
+        if (getIntent().getBooleanExtra("isNewUser", false))
+            addCoins(mAuth.getCurrentUser().getUid(), "Congrats 100 coins is added into your wallet as welcome coins you can use it on your next shopping from us.");
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        if (getIntent().getBooleanExtra("isNewUser", false) && pendingDynamicLinkData != null) {
+                            Uri deepLink = pendingDynamicLinkData.getLink();
+                            String id = deepLink.getQueryParameter("id");
+                            addCoins(id, "Congrats 100 coins is added into your wallet for your referral you can use it on your next shopping from us.");
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "On Faliure", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void addCoins(String uid, String reason) {
+        DatabaseReference referenceToUser = FirebaseDatabase.getInstance().getReference().child("Users");
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MMM dd");
+        String time = format.format(calendar.getTime());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("description", reason);
+        String amount = "100";
+        map.put("change", "+" + 100);
+        map.put("amount", amount);
+        referenceToUser.child(uid).child("konfettiView").setValue(true);
+        referenceToUser.child(uid).child("rewards").setValue(amount);
+        map.put("time", time);
+        new SendNotification().updateNotificationCount(uid, reason, "3");
+        referenceToUser.child(uid).child("coin_history").push().updateChildren(map);
     }
 
     @Override
@@ -147,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FirebaseDatabase.getInstance().getReference().child(VERSION_CODE_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     long latestAppVersion = (long) dataSnapshot.getValue();
                     if (latestAppVersion > getCurrentVersionCode()) {
@@ -166,8 +204,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -184,74 +223,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initAllBadge() {
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 3; i++) {
             final int finalI = i;
             referenceToUsers.child(String.valueOf(i)).child("count").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists() && !dataSnapshot.getValue().toString().equals("0")) {
-                        models.get(finalI).showBadge();
-                        models.get(finalI).setBadgeTitle(dataSnapshot.getValue().toString());
+                        if (finalI == 0 || finalI == 1) {
+                            models.get(finalI).showBadge();
+                            models.get(finalI).setBadgeTitle(dataSnapshot.getValue().toString());
+                        } else {
+                            models.get(finalI + 1).showBadge();
+                            models.get(finalI + 1).setBadgeTitle(dataSnapshot.getValue().toString());
+                        }
                     } else
                         models.get(finalI).hideBadge();
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
             });
         }
     }
 
-    public void initQueryBadge() {
-        referenceToUsers.child("2").child("count").addValueEventListener(new ValueEventListener() {
+    private void initWalletBadge() {
+        referenceToUsers.child("3").child("count").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
-                    models.get(2).showBadge();
-                    if (dataSnapshot.getValue().toString().equals("1") || tag != null) {
-                        if (dataSnapshot.getValue().toString().equals("1")) {
-                            models.get(2).setBadgeTitle("1");
-                            models.get(2).updateBadgeTitle("1");
-                        } else
-                            models.get(2).setBadgeTitle(dataSnapshot.getValue().toString());
-                        tag = null;
-                    } else {
-                        if (models.get(2).isBadgeShowed())
-                            models.get(2).updateBadgeTitle(dataSnapshot.getValue().toString());
-                        else
-                            models.get(2).setBadgeTitle(dataSnapshot.getValue().toString());
-                    }
-                } else
-                    models.get(2).hideBadge();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void updateQueryCount() {
-        referenceToQueryCount.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long count = dataSnapshot.getChildrenCount();
-                referenceToUsers.child("2").child("count").setValue(count);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void initNotificationBadge() {
-        referenceToUsers.child("4").child("count").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
                     models.get(4).showBadge();
                     if (dataSnapshot.getValue().toString().equals("1") || tag != null) {
@@ -261,11 +261,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         models.get(4).updateBadgeTitle(dataSnapshot.getValue().toString());
                     }
                 } else
+                    models.get(4).hideBadge();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void initQueryBadge() {
+        referenceToUsers.child("2").child("count").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
+                    models.get(3).showBadge();
+                    if (dataSnapshot.getValue().toString().equals("1") || tag != null) {
+                        if (dataSnapshot.getValue().toString().equals("1")) {
+                            models.get(3).setBadgeTitle("1");
+                            models.get(3).updateBadgeTitle("1");
+                        } else
+                            models.get(3).setBadgeTitle(dataSnapshot.getValue().toString());
+                        tag = null;
+                    } else {
+                        if (models.get(3).isBadgeShowed())
+                            models.get(3).updateBadgeTitle(dataSnapshot.getValue().toString());
+                        else
+                            models.get(3).setBadgeTitle(dataSnapshot.getValue().toString());
+                    }
+                } else
                     models.get(3).hideBadge();
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void updateQueryCount() {
+        referenceToQueryCount.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.getChildrenCount();
+                referenceToUsers.child("2").child("count").setValue(count);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -273,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initTrendingBadge() {
         referenceToUsers.child("1").child("count").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
                     models.get(1).showBadge();
                     if (dataSnapshot.getValue().toString().equals("1") || tag != null) {
@@ -287,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -296,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initHomeBadge() {
         referenceToUsers.child("0").child("count").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
                     models.get(0).showBadge();
                     if (dataSnapshot.getValue().toString().equals("1") || tag != null) {
@@ -310,12 +354,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
             }
+
         });
     }
 
     public void checkFragment(String tag) {
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference rf = FirebaseDatabase.getInstance().getReference().child("Users").child(user);
+
         switch (tag) {
             case "home":
                 navigationTabBar.setViewPager(viewPager, 0);
@@ -324,13 +372,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navigationTabBar.setViewPager(viewPager, 1);
                 break;
             case "query":
-                navigationTabBar.setViewPager(viewPager, 2);
-                break;
-            case "rewards":
                 navigationTabBar.setViewPager(viewPager, 3);
                 break;
-            case "notification":
+            case "rewards":
                 navigationTabBar.setViewPager(viewPager, 4);
+                break;
+            case "notification":
+                new GetCount().decreaseTotalCount("4", user, "notification");
+                rf.child("4").child("count").setValue(0);
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
                 break;
         }
     }
@@ -380,12 +430,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         referenceToUsers.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 numberuser.setText("Phone Number :\n" + dataSnapshot.child("phone").getValue());
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -419,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         referenceToUsers.child("address").addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 address.setText(
                         "My Address :\n\n" +
                                 dataSnapshot.child("House No").getValue() + "\t" +
@@ -431,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -466,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final TextInputEditText name = view.findViewById(R.id.name);
         referenceToUsers.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 name.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
                 Picasso.get().load(Objects.requireNonNull(dataSnapshot.child("image").getValue()).toString()).networkPolicy(NetworkPolicy.OFFLINE)
                         .error(R.drawable.thumbnaildefault).into(circleImageView, new Callback() {
@@ -484,7 +534,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -560,12 +610,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onSuccess(Uri uri) {
                                     displayData.child("Users").child(current_userId).child("image").setValue(uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(Task<Void> task) {
                                             Toast.makeText(MainActivity.this, getString(R.string.profile_image_update), Toast.LENGTH_SHORT).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
-                                        public void onFailure(@NonNull Exception e) {
+                                        public void onFailure(Exception e) {
                                             Toast.makeText(MainActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                                         }
                                     });
@@ -575,7 +625,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception exception) {
+                        public void onFailure(Exception exception) {
                             loadingBar.dismiss();
                             Toast.makeText(MainActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         }
@@ -595,7 +645,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (user != null) {
             referenceToUsers.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         temail.setText(Objects.requireNonNull(dataSnapshot.child("email").getValue()).toString());
                         tname.setText(Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString());
@@ -617,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                public void onCancelled(DatabaseError databaseError) {
                 }
             });
         }
@@ -656,14 +706,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.item_notification);
+        final ImageBadgeView imageBadgeView = item.getActionView().findViewById(R.id.notification_badge);
+        final String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference rf = FirebaseDatabase.getInstance().getReference().child("Users").child(user);
+
+        referenceToUsers.child("4").child("count").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
+                    imageBadgeView.setBadgeValue(Integer.valueOf(dataSnapshot.getValue().toString()));
+                } else
+                    imageBadgeView.setBadgeValue(0);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        imageBadgeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new GetCount().decreaseTotalCount("4", user, "notification");
+                rf.child("4").child("count").setValue(0);
+                imageBadgeView.setBadgeValue(0);
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.logout:
                 logoutUser();
-                break;
-            case R.id.share:
-                shareApp();
                 break;
             case R.id.rate:
                 rateApp();
@@ -682,13 +761,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void shareApp() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.sathi4shopping\nI'm using sathi4shopping to make my shopping best and efficient try it once.");
-        intent.setType("text/plain");
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
+        FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLink(Uri.parse("https://www.sathi4shopping.com?id=" + mAuth.getCurrentUser().getUid()))
+                .setDomainUriPrefix("https://s4s.page.link")
+                // Open links with this app on Android
+                .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
+                // Open links with com.example.ios on iOS
+                .setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
+                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
+                .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                        if (task.isSuccessful()) {
+                            Uri shortLink = task.getResult().getShortLink();
+                            startActivity(new Intent(MainActivity.this, ReferAndEarnActivity.class).putExtra("referLink", "" + shortLink));
+                        } else {
+                            Toast.makeText(MainActivity.this, "try again: No internet connection" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "try again: No internet connection" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void logoutUser() {
@@ -698,7 +794,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .build();
         GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(Task<Void> task) {
                 startActivity(new Intent(MainActivity.this, SignInSignUpActivity.class));
                 finish();
             }
@@ -707,7 +803,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
@@ -718,13 +814,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ((ViewPager) findViewById(R.id.vp_horizontal_ntb)).setCurrentItem(1);
                 break;
             case R.id.nav_inbox:
-                ((ViewPager) findViewById(R.id.vp_horizontal_ntb)).setCurrentItem(2);
-                break;
-            case R.id.nav_wallet:
                 ((ViewPager) findViewById(R.id.vp_horizontal_ntb)).setCurrentItem(3);
                 break;
-            case R.id.nav_notification:
+            case R.id.nav_wallet:
                 ((ViewPager) findViewById(R.id.vp_horizontal_ntb)).setCurrentItem(4);
+                break;
+            case R.id.nav_eshopping:
+                ((ViewPager) findViewById(R.id.vp_horizontal_ntb)).setCurrentItem(2);
                 break;
             case R.id.nav_phone:
                 checkPhoneNumber();
@@ -742,20 +838,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sendToWebsite();
                 break;
             case R.id.nav_help:
-                sendToGmail();
+                sendToGmail("Help and feedback", "sathi4shopping@gmail.com");
                 break;
             case R.id.nav_privacy:
                 sendToPrivacyPolice();
+                break;
+            case R.id.report_problem:
+                sendToGmail("Bugs/Issues in S4S App", "contact@des2dev.com");
                 break;
             case R.id.terms:
                 sendToTermsCondition();
                 break;
             case R.id.membership:
-                startActivity(new Intent(this,MemberShipActivity.class));
+                startActivity(new Intent(this, MemberShipActivity.class));
+                break;
+            case R.id.refer:
+                shareApp();
+                break;
+            case R.id.contact:
+                sendToWhatsApp();
+                break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void sendToWhatsApp() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://api.whatsapp.com/send?phone=919213333639&text=&source=&data="));
+        if (intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
     }
 
     private void sendToTermsCondition() {
@@ -782,13 +895,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
     }
 
-    private void sendToGmail() {
+    private void sendToGmail(String subject, String email) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.CATEGORY_APP_EMAIL, true);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Help and feedback");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.email)});
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
         final PackageManager pm = getPackageManager();
         final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
         ResolveInfo best = null;
@@ -803,7 +916,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void checkAddress() {
         referenceToUsers.child("address").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists())
                     takeUserAddress(GlobalVariable.dialogmessage);
                 else {
@@ -815,7 +928,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
@@ -843,7 +956,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void checkPhoneNumber() {
         referenceToUsers.child("phone").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (Objects.equals(dataSnapshot.getValue(), ""))
                     verifyPhoneNumber();
                 else {
@@ -855,7 +968,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -907,9 +1020,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initUI() {
         fragmentAdapter.addFragment(new HomeFragment());
         fragmentAdapter.addFragment(new TrendingFragment());
+        fragmentAdapter.addFragment(new EcommerceFragment());
         fragmentAdapter.addFragment(new ChatFragment());
         fragmentAdapter.addFragment(new WalletFragment());
-        fragmentAdapter.addFragment(new NotificationFragment());
+
         viewPager.setAdapter(fragmentAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -932,20 +1046,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ((Toolbar) findViewById(R.id.toolbar)).getWrapper().setTitle("Trending");
                     ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.navheaderlayout).setBackgroundColor(getResources().getColor(R.color.color2));
                 } else if (i == 2) {
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.color5));
+                    findViewById(R.id.toolbar).setBackgroundColor(getResources().getColor(R.color.color5));
+                    ((Toolbar) findViewById(R.id.toolbar)).getWrapper().setTitle("E-Shopping");
+                    ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.navheaderlayout).setBackgroundColor(getResources().getColor(R.color.color5));
+                } else if (i == 3) {
                     getWindow().setStatusBarColor(getResources().getColor(R.color.color3));
                     findViewById(R.id.toolbar).setBackgroundColor(getResources().getColor(R.color.color3));
                     ((Toolbar) findViewById(R.id.toolbar)).getWrapper().setTitle("Inbox");
                     ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.navheaderlayout).setBackgroundColor(getResources().getColor(R.color.color3));
-                } else if (i == 3) {
+                } else if (i == 4) {
                     getWindow().setStatusBarColor(getResources().getColor(R.color.color4));
                     findViewById(R.id.toolbar).setBackgroundColor(getResources().getColor(R.color.color4));
-                    ((Toolbar) findViewById(R.id.toolbar)).getWrapper().setTitle(" My Wallet");
+                    ((Toolbar) findViewById(R.id.toolbar)).getWrapper().setTitle("E-Wallet");
                     ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.navheaderlayout).setBackgroundColor(getResources().getColor(R.color.color4));
-                } else if (i == 4) {
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.color5));
-                    findViewById(R.id.toolbar).setBackgroundColor(getResources().getColor(R.color.color5));
-                    ((Toolbar) findViewById(R.id.toolbar)).getWrapper().setTitle("Notification");
-                    ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0).findViewById(R.id.navheaderlayout).setBackgroundColor(getResources().getColor(R.color.color5));
                 }
             }
 
@@ -956,7 +1070,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         colors = getResources().getStringArray(R.array.default_preview);
-
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(
@@ -976,8 +1089,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_forum_white_24dp),
+                        getResources().getDrawable(R.drawable.ic_shopping_cart),
                         Color.parseColor(colors[2]))
+                        .title("E-Shopping")
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_shopping_cart))
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_forum_white_24dp),
+                        Color.parseColor(colors[3]))
                         .title("Inbox")
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_forum_white_24dp))
                         .build()
@@ -985,17 +1106,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_account_balance_wallet_white_24dp),
-                        Color.parseColor(colors[3]))
+                        Color.parseColor(colors[4]))
                         .title("My Wallet")
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_account_balance_wallet_white_24dp))
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_bell),
-                        Color.parseColor(colors[4]))
-                        .title("Notification")
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_bell))
                         .build()
         );
         navigationTabBar.setModels(models);
@@ -1022,12 +1135,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         rf.child("1").child("count").setValue(0);
                         break;
                     case 3:
-                        new GetCount().decreaseTotalCount("3", user, "notification");
-                        rf.child("3").child("count").setValue(0);
+                        new GetCount().decreaseTotalCount("2", user, "notification");
+                        rf.child("2").child("count").setValue(0);
                         break;
                     case 4:
-                        new GetCount().decreaseTotalCount("4", user, "notification");
-                        rf.child("4").child("count").setValue(0);
+                        new GetCount().decreaseTotalCount("3", user, "notification");
+                        rf.child("3").child("count").setValue(0);
                         break;
                 }
             }

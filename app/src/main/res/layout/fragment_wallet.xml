@@ -49,6 +49,7 @@
                 />
         </LinearLayout>
     <TextView
+        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rewards"
@@ -57,6 +58,17 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="Do Shopping by Sathi4Shopping \nand earn rewards"/>
+
+    <TextView
+        android:id="@+id/redeem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:autoLink="all"
+        android:text="@string/how_to_redeem" />
+
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/viewKonfetti"
         android:layout_width="match_parent"

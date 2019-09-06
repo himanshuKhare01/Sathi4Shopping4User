@@ -3,19 +3,20 @@ package com.sathi4shopping.Fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
@@ -25,12 +26,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sathi4shopping.Activity.WebViewActivity;
 import com.sathi4shopping.Class.NetworkBroadcastReceiver;
 import com.sathi4shopping.R;
 import com.sathi4shopping.templates.Trending;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
+
+import io.github.ponnamkarthik.richlinkpreview.MetaData;
+import io.github.ponnamkarthik.richlinkpreview.RichLinkListener;
 import io.github.ponnamkarthik.richlinkpreview.RichLinkView;
 import io.github.ponnamkarthik.richlinkpreview.ViewListener;
 
@@ -134,7 +140,6 @@ public class TrendingFragment extends Fragment {
                                     public void onSuccess(boolean status) {
                                         holder.cardView.setVisibility(View.VISIBLE);
                                     }
-
                                     @Override
                                     public void onError(Exception e) {
                                         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
@@ -152,14 +157,11 @@ public class TrendingFragment extends Fragment {
                     holder.cardView.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
-                holder.richLinkView.setOnClickListener(new View.OnClickListener() {
+                holder.richLinkView.setDefaultClickListener(false);
+                holder.richLinkView.setClickListener(new RichLinkListener() {
                     @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(model.getLink()));
-                        if (intent.resolveActivity(context.getPackageManager()) != null)
-                            startActivity(intent);
+                    public void onClicked(View view, MetaData meta) {
+                        startActivity(new Intent(getActivity(), WebViewActivity.class).putExtra("url", model.getLink()));
                     }
                 });
                 holder.share.setOnClickListener(new View.OnClickListener() {

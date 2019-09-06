@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.sathi4shopping">
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -20,23 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".Activity.MemberShipActivity"></activity>
+        <activity android:name=".Activity.ReferAndEarnActivity"></activity>
+
+        <activity android:name=".Activity.WebViewActivity" />
+
+        <activity android:name=".Activity.NotificationActivity" />
+        <activity android:name=".Activity.MemberShipActivity" />
         <activity android:name=".Activity.CoinsHistory" />
-
-        <service android:name=".Class.FCMService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-
-
-        <receiver android:name=".Class.NetworkBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".Activity.IntroActivity"
             android:screenOrientation="portrait">
@@ -46,8 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.paytm.pgsdk.PaytmPGActivity"
-            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation|keyboard"/>
+
         <activity
             android:name=".Activity.GuideActivity"
             android:screenOrientation="portrait" />
@@ -55,10 +42,21 @@
         <activity
             android:name=".Activity.SignInSignUpActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".Activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="s4s.page.link"
+                    android:scheme="https" />
+            </intent-filter>
             <intent-filter>
                 <action android:name=".MainActivity" />
 
@@ -78,12 +76,27 @@
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".Activity.OTPVerfiyActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Activity.AddressInputActivity"
             android:parentActivityName=".Activity.MainActivity"
             android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_SftYmX5WMKypaY" />
+        <receiver android:name=".Class.NetworkBroadcastReceiver">
+            <intent-filter>
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".Class.FCMService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

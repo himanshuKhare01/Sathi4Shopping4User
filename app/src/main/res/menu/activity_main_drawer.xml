@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_whatshot_selected_24dp"
             android:title="@string/trending" />
         <item
+            android:id="@+id/nav_eshopping"
+            android:icon="@drawable/ic_shopping_cart"
+            android:title="@string/e_shopping" />
+        <item
             android:id="@+id/nav_inbox"
             android:icon="@drawable/ic_forum_white_24dp"
             android:title="@string/inbox" />
@@ -20,10 +24,6 @@
             android:id="@+id/nav_wallet"
             android:icon="@drawable/ic_account_balance_wallet_white_24dp"
             android:title="@string/my_wallet" />
-        <item
-            android:id="@+id/nav_notification"
-            android:icon="@drawable/ic_bell"
-            android:title="@string/notification" />
     </group>
     <item android:title="@string/settings">
         <menu>
@@ -41,6 +41,8 @@
                 android:icon="@drawable/ic_phone_white_24dp"
                 android:title="@string/ph_no" >
             </item>
+
+
         </menu>
     </item>
     <item android:title="New Features">
@@ -49,7 +51,16 @@
                 android:id="@+id/membership"
                 android:icon="@drawable/ic_account_circle_white_24dp"
                 android:title="Membership"/>
+            <item
+                android:id="@+id/refer"
+                android:icon="@drawable/ic_share_white_24dp"
+                android:title="Refer And Earn" />
+            <item
+                android:id="@+id/contact"
+                android:icon="@drawable/ic_whatsapp"
+                android:title="Contact At WhatsApp" />
         </menu>
+
     </item>
     <item android:title="@string/others_labels">
         <menu>
@@ -59,6 +70,11 @@
             <item
                 android:id="@+id/nav_help"
                 android:title="@string/help_and_feedback" />
+
+            <item
+                android:id="@+id/report_problem"
+                android:title="Report Bug/Issue" />
+
             <item
                 android:id="@+id/nav_privacy"
                 android:title="@string/privacy_policy"/>

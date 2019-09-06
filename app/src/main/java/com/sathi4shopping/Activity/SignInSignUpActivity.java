@@ -3,17 +3,17 @@ package com.sathi4shopping.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -152,7 +152,8 @@ public class SignInSignUpActivity extends AppCompatActivity {
                     GoogleSignIn.getClient(this, gso).signOut();
                 }
             } else {
-                Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                Log.d("SignInSignUp", "Authentication Failed " + result.getStatus().getStatusMessage());
+                Toast.makeText(SignInSignUpActivity.this, "Authentication Failed " + result.getStatus().getStatusMessage(), Toast.LENGTH_LONG).show();
                 waitDialog.dismiss();
             }
         }
@@ -167,14 +168,15 @@ public class SignInSignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             storeUserData();
                             waitDialog.dismiss();
-                            findActivity();
+                            findActivity(task.getResult().getAdditionalUserInfo().isNewUser());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 waitDialog.dismiss();
-                Toast.makeText(SignInSignUpActivity.this, "Authentication Failed", Toast.LENGTH_LONG).show();
+                Log.d("SignInSignUp", "Authentication Failed " + e.getMessage());
+                Toast.makeText(SignInSignUpActivity.this, "Authentication Failed " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).addOnCanceledListener(new OnCanceledListener() {
             @Override
@@ -184,13 +186,14 @@ public class SignInSignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void findActivity() {
+
+    private void findActivity(boolean newuser) {
         cUserDataRef = FirebaseDatabase.getInstance().getReference().child("Users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         cUserDataRef.child("phone").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().isEmpty()) {
-                    startActivity(new Intent(SignInSignUpActivity.this, MainActivity.class));
+                    startActivity(new Intent(SignInSignUpActivity.this, MainActivity.class).putExtra("isNewUser", false));
                     finish();
                 } else {
                     startActivity(new Intent(SignInSignUpActivity.this, VerifyPhoneNumberActivity.class));

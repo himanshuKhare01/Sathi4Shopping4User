@@ -83,4 +83,23 @@ public class GetCount {
         });
     }
 
+    void updateNotificationcount(final String fragment, final String uid) {
+        userDataBaseRef.child(uid).child(fragment).child("count").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    long notificationcount = (long) dataSnapshot.getValue();
+                    notificationcount++;
+                    userDataBaseRef.child(uid).child(fragment).child("count").setValue(notificationcount);
+                } else
+                    userDataBaseRef.child(uid).child(fragment).child("count").setValue(1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }
