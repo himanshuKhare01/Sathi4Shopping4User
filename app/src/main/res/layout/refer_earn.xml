@@ -10,6 +10,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:onClick="back"
+            android:src="@drawable/ic_left_arrow2"
+            tools:ignore="ContentDescription" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,20 +27,10 @@
             android:text="Refer And Get Free 100 Coins"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/refer_earn"
-            tools:ignore="ContentDescription"></ImageView>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:onClick="back"
-            android:src="@drawable/ic_left_arrow2"
-            tools:ignore="ContentDescription" />
+            android:src="@drawable/refer_earn" />
 
         <TextView
             android:id="@+id/referLink"
@@ -55,5 +53,6 @@
             android:text="@string/refer_this_app_in_your_contacts_and_after_installing_the_app_you_both_get_free_100_coins_use_it_for_next_shopping"
             android:textColor="@android:color/secondary_text_light"
             android:textSize="14sp" />
+
     </LinearLayout>
 </ScrollView>

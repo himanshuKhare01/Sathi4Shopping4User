@@ -136,14 +136,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             checkFragment(FCMService.tag);
         }
         checkForUpdate();
-        if (getIntent().getBooleanExtra("isNewUser", false))
-            addCoins(mAuth.getCurrentUser().getUid(), "Congrats 100 coins is added into your wallet as welcome coins you can use it on your next shopping from us.");
+
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(getIntent())
                 .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
                     @Override
                     public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-                        if (getIntent().getBooleanExtra("isNewUser", false) && pendingDynamicLinkData != null) {
+                        if (getIntent().getStringExtra("isNewUser").equals("true") && pendingDynamicLinkData != null) {
                             Uri deepLink = pendingDynamicLinkData.getLink();
                             String id = deepLink.getQueryParameter("id");
                             addCoins(id, "Congrats 100 coins is added into your wallet for your referral you can use it on your next shopping from us.");
@@ -156,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(MainActivity.this, "On Faliure", Toast.LENGTH_SHORT).show();
                     }
                 });
+        if (getIntent().getStringExtra("isNewUser").equals("true")) {
+            addCoins(mAuth.getCurrentUser().getUid(), "Congrats 100 coins is added into your wallet as welcome coins you can use it on your next shopping from us.");
+        }
     }
 
     private void addCoins(String uid, String reason) {

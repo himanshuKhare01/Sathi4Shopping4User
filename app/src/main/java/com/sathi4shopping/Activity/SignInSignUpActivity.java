@@ -193,7 +193,7 @@ public class SignInSignUpActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().isEmpty()) {
-                    startActivity(new Intent(SignInSignUpActivity.this, MainActivity.class).putExtra("isNewUser", false));
+                    startActivity(new Intent(SignInSignUpActivity.this, MainActivity.class).putExtra("isNewUser", "false"));
                     finish();
                 } else {
                     startActivity(new Intent(SignInSignUpActivity.this, VerifyPhoneNumberActivity.class));

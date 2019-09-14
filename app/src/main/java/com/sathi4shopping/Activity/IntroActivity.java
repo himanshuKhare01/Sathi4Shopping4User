@@ -1,16 +1,15 @@
 package com.sathi4shopping.Activity;
 
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -78,7 +77,7 @@ public class IntroActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().isEmpty()) {
-                            startActivity(new Intent(IntroActivity.this, MainActivity.class));
+                            startActivity(new Intent(IntroActivity.this, MainActivity.class).putExtra("isNewUser", "false"));
                             finish();
                         } else {
                             startActivity(new Intent(IntroActivity.this, VerifyPhoneNumberActivity.class));

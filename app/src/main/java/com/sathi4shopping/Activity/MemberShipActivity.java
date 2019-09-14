@@ -1,5 +1,7 @@
 package com.sathi4shopping.Activity;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,13 +12,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.razorpay.Checkout;
-import com.razorpay.PaymentResultListener;
-import com.razorpay.Razorpay;
+import com.razorpay.Order;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import com.sathi4shopping.R;
 
-public class MemberShipActivity extends AppCompatActivity implements PaymentResultListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class MemberShipActivity extends AppCompatActivity implements PaymentResultWithDataListener {
     Button pay;
-    Razorpay razorpay4payment;
+    private RazorpayClient razorpayClient;
+    private Checkout checkout;
+    private JSONObject options;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,37 +39,34 @@ public class MemberShipActivity extends AppCompatActivity implements PaymentResu
                 finish();
             }
         });
-        pay = findViewById(R.id.membership_pay);
         Checkout.preload(this);
+        pay = findViewById(R.id.membership_pay);
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MemberShipActivity.this, "This feature is currently unavailable.", Toast.LENGTH_LONG).show();
+                checkout = new Checkout();
+                checkout.setImage(R.mipmap.ic_launcher);
+                options = new JSONObject();
+                try {
+                    razorpayClient = new RazorpayClient("rzp_test_q13bZbTyw3yrBf", "Odg0fHGIB7D5haD81FFcRS4G");
+                    options.put("amount", 5000);
+                    options.put("currency", "INR");
+                    options.put("receipt", "txn_1");
+                    new DoPayment().execute(options);
+                } catch (RazorpayException | JSONException e) {
+                    e.printStackTrace();
+                    Log.e("MemberShip error 3:", "" + e);
+                }
+
             }
         });
         changeBackgroundColor();
     }
 
-//    public void startPayment() {    /**   * Instantiate Checkout   */
-//        razorpay4payment = new Razorpay(this,"rzp_test_H7PrB8ned2Tync");
-//        Checkout checkout = new Checkout();  /**   * Set your logo here   */
-//        checkout.setImage(R.mipmap.ic_launcher);  /**   * Reference to current activity   */
-//        final Activity activity = MemberShipActivity.this;  /**   * Pass your payment options to the Razorpay Checkout as a JSONObject   */
-//        try {
-//            JSONObject options = new JSONObject();
-//            options.put("amount", 50000); // amount in the smallest currency unit
-//            options.put("currency", "INR");
-//            options.put("receipt", "order_rcptid_11");
-//            options.put("name", "Sathi 4 Shopping LLP");    /**     * Description can be anything     * eg: Order #123123 - This order number is passed by you for your internal reference. This is not the `razorpay_order_id`.     *     Invoice Payment     *     etc.     */
-//            options.put("description", "member ship");
-//            Order order = razorpay4payment.Orders.create(options);
-//            options.put("order_id", "order1");
-//
-//            checkout.open(activity, options);
-//        } catch (Exception e) {
-//            Log.e("MemberShipActivity", "Error in starting Razorpay Checkout", e);
-//        }
-//    }
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+        Toast.makeText(this, "Payment success", Toast.LENGTH_SHORT).show();
+    }
 
 
     void changeBackgroundColor() {
@@ -90,14 +98,33 @@ public class MemberShipActivity extends AppCompatActivity implements PaymentResu
     }
 
     @Override
-    public void onPaymentSuccess(String s) {
-
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        Log.e("MemberShip error 4:", "" + s);
     }
 
-    @Override
-    public void onPaymentError(int i, String s) {
-        Log.d("MemberShip", s);
-        Toast.makeText(this, "" + s, Toast.LENGTH_SHORT).show();
+    @SuppressLint("StaticFieldLeak")
+    class DoPayment extends AsyncTask<JSONObject, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(JSONObject... options) {
+            try {
+                Order order = razorpayClient.Orders.create(options[0]);
+                options[0].put("name", "Sathi 4 Shopping LLP");
+                options[0].put("description", "Reference No. 1");
+                options[0].put("order_id", order.toJson().getString("id"));
+                checkout.open(MemberShipActivity.this, options[0]);
+                return options[0];
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("MemberShip error 2:", "" + e);
+            }
+            return null;
+        }
 
+
+        @Override
+        protected void onPostExecute(JSONObject options) {
+            super.onPostExecute(options);
+
+        }
     }
 }

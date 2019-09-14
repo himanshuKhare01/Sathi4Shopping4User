@@ -42,7 +42,7 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
             database.child("phone").setValue("+91" + mobile_number.getText().toString());
             Toast.makeText(VerifyPhoneNumberActivity.this, getString(R.string.thanks_for_verification), Toast.LENGTH_SHORT).show();
             sendWelcomeNotification();
-            startActivity(new Intent(VerifyPhoneNumberActivity.this, MainActivity.class).putExtra("isNewUser", true));
+            startActivity(new Intent(VerifyPhoneNumberActivity.this, MainActivity.class).putExtra("isNewUser", "true"));
             finish();
 
         }

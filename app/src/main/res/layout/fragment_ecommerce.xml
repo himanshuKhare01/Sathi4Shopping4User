@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,104 +8,52 @@
 
 
     <LinearLayout
+        android:id="@+id/flipkart_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
         android:background="@drawable/usermainbackground"
-        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
         android:stateListAnimator="@animator/main_animator">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/flipkartlogo"
+            tools:ignore="ContentDescription" />
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_flipkart"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:stateListAnimator="@animator/chat_animator"
-            app:cardCornerRadius="5dp">
-
-            <ProgressBar
-                android:id="@+id/eshopping_progressbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <io.github.ponnamkarthik.richlinkpreview.RichLinkView
-                android:id="@+id/richLinkView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:text="Buy Latest Mobile Phone \nAt Flipkart"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/flipkart_tv"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
         android:background="@drawable/usermainbackground"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
         android:stateListAnimator="@animator/main_animator">
 
-        <LinearLayout
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/flipkartlogo"
+            tools:ignore="ContentDescription" />
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_flipkart"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:stateListAnimator="@animator/chat_animator"
-            app:cardCornerRadius="5dp">
-
-            <ProgressBar
-                android:id="@+id/eshopping_progressbar2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <io.github.ponnamkarthik.richlinkpreview.RichLinkView
-                android:id="@+id/richLinkView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></io.github.ponnamkarthik.richlinkpreview.RichLinkView>
-        </androidx.cardview.widget.CardView>
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:text="Buy TV And Appliances \nAt Flipkart"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

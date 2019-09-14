@@ -82,7 +82,7 @@
 
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_SftYmX5WMKypaY" />
+            android:value="rzp_test_q13bZbTyw3yrBf" />
         <receiver android:name=".Class.NetworkBroadcastReceiver">
             <intent-filter>
                 <action
