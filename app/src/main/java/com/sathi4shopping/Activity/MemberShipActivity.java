@@ -16,10 +16,8 @@ import com.razorpay.Order;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 import com.razorpay.RazorpayClient;
-import com.razorpay.RazorpayException;
 import com.sathi4shopping.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MemberShipActivity extends AppCompatActivity implements PaymentResultWithDataListener {
@@ -44,19 +42,21 @@ public class MemberShipActivity extends AppCompatActivity implements PaymentResu
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkout = new Checkout();
-                checkout.setImage(R.mipmap.ic_launcher);
-                options = new JSONObject();
-                try {
-                    razorpayClient = new RazorpayClient("rzp_test_q13bZbTyw3yrBf", "Odg0fHGIB7D5haD81FFcRS4G");
-                    options.put("amount", 5000);
-                    options.put("currency", "INR");
-                    options.put("receipt", "txn_1");
-                    new DoPayment().execute(options);
-                } catch (RazorpayException | JSONException e) {
-                    e.printStackTrace();
-                    Log.e("MemberShip error 3:", "" + e);
-                }
+                Toast.makeText(MemberShipActivity.this, "This feature is currently unavailable", Toast.LENGTH_SHORT).show();
+
+//                checkout = new Checkout();
+//                checkout.setImage(R.mipmap.ic_launcher);
+//                options = new JSONObject();
+//                try {
+//                    razorpayClient = new RazorpayClient("rzp_test_q13bZbTyw3yrBf", "Odg0fHGIB7D5haD81FFcRS4G");
+//                    options.put("amount", 5000);
+//                    options.put("currency", "INR");
+//                    options.put("receipt", "txn_1");
+//                    new DoPayment().execute(options);
+//                } catch (RazorpayException | JSONException e) {
+//                    e.printStackTrace();
+//                    Log.e("MemberShip error 3:", "" + e);
+//                }
 
             }
         });

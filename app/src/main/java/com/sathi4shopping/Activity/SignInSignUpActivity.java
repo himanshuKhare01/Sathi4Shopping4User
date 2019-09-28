@@ -168,7 +168,7 @@ public class SignInSignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             storeUserData();
                             waitDialog.dismiss();
-                            findActivity(task.getResult().getAdditionalUserInfo().isNewUser());
+                            findActivity();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -187,7 +187,7 @@ public class SignInSignUpActivity extends AppCompatActivity {
     }
 
 
-    private void findActivity(boolean newuser) {
+    private void findActivity() {
         cUserDataRef = FirebaseDatabase.getInstance().getReference().child("Users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         cUserDataRef.child("phone").addValueEventListener(new ValueEventListener() {
             @Override

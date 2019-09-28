@@ -7,7 +7,7 @@ public class UserDisplayTemplate {
     private String uri;
     private String lasttext;
     private String count;
-    private String  visible;
+    private String visible;
 
     public UserDisplayTemplate(String s1, String s2,String s3,String s4,String s5,String s6,String s7, String s8){
         title=s1;

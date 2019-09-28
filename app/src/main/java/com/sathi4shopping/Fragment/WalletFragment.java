@@ -106,7 +106,6 @@ public class WalletFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getActivity() != null){
             showornot();
-            referenceToUser.child(uid).child("konfettiView").setValue(false);
         }
     }
 
@@ -125,6 +124,7 @@ public class WalletFragment extends Fragment {
                     addSizes(new Size(12, 5)).
                     setPosition(-10f, konfettiView.getWidth() + 500f, -10f, -10f).
                     streamFor(50, 10000L);
+                    referenceToUser.child(uid).child("konfettiView").setValue(false);
                 }
             }
 

@@ -46,7 +46,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -113,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String tag = null;
     Uri resultUri = null;
     public static final String VERSION_CODE_KEY = "latest_app_version";
-    boolean isnewUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,27 +135,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         checkForUpdate();
 
-        FirebaseDynamicLinks.getInstance()
-                .getDynamicLink(getIntent())
-                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                    @Override
-                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-                        if (getIntent().getStringExtra("isNewUser").equals("true") && pendingDynamicLinkData != null) {
-                            Uri deepLink = pendingDynamicLinkData.getLink();
-                            String id = deepLink.getQueryParameter("id");
-                            addCoins(id, "Congrats 100 coins is added into your wallet for your referral you can use it on your next shopping from us.");
-                        }
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "On Faliure", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        if (getIntent().getStringExtra("isNewUser").equals("true")) {
-            addCoins(mAuth.getCurrentUser().getUid(), "Congrats 100 coins is added into your wallet as welcome coins you can use it on your next shopping from us.");
-        }
     }
 
     private void addCoins(String uid, String reason) {
@@ -187,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FirebaseDatabase.getInstance().getReference().child(VERSION_CODE_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     long latestAppVersion = (long) dataSnapshot.getValue();
                     if (latestAppVersion > getCurrentVersionCode()) {
@@ -208,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
@@ -253,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initWalletBadge() {
         referenceToUsers.child("3").child("count").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
                     models.get(4).showBadge();
                     if (dataSnapshot.getValue().toString().equals("1") || tag != null) {
@@ -267,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
@@ -304,13 +281,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateQueryCount() {
         referenceToQueryCount.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount();
                 referenceToUsers.child("2").child("count").setValue(count);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
@@ -471,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         referenceToUsers.child("address").addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 address.setText(
                         "My Address :\n\n" +
                                 dataSnapshot.child("House No").getValue() + "\t" +
@@ -483,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
@@ -716,7 +693,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         referenceToUsers.child("4").child("count").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !Objects.requireNonNull(dataSnapshot.getValue()).toString().equals("0")) {
                     imageBadgeView.setBadgeValue(Integer.valueOf(dataSnapshot.getValue().toString()));
                 } else
@@ -724,7 +701,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
         imageBadgeView.setOnClickListener(new View.OnClickListener() {
@@ -796,14 +773,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .build();
         GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task) {
                 startActivity(new Intent(MainActivity.this, SignInSignUpActivity.class));
                 finish();
             }
         });
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -918,7 +894,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void checkAddress() {
         referenceToUsers.child("address").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists())
                     takeUserAddress(GlobalVariable.dialogmessage);
                 else {
@@ -930,7 +906,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
@@ -958,7 +934,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void checkPhoneNumber() {
         referenceToUsers.child("phone").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (Objects.equals(dataSnapshot.getValue(), ""))
                     verifyPhoneNumber();
                 else {
@@ -970,7 +946,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });

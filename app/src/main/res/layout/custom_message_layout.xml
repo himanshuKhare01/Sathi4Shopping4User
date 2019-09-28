@@ -102,7 +102,6 @@
         android:layout_alignParentTop="@+id/receive_layout"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/card"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="vertical"

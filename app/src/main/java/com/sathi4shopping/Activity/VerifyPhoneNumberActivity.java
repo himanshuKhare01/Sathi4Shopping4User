@@ -1,7 +1,9 @@
 package com.sathi4shopping.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -10,8 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,11 +24,17 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.sathi4shopping.Class.GetCount;
 import com.sathi4shopping.Class.NetworkBroadcastReceiver;
 import com.sathi4shopping.Class.SendNotification;
 import com.sathi4shopping.R;
 import com.sathi4shopping.Variable.GlobalVariable;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +55,6 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
             sendWelcomeNotification();
             startActivity(new Intent(VerifyPhoneNumberActivity.this, MainActivity.class).putExtra("isNewUser", "true"));
             finish();
-
         }
 
         @Override
@@ -85,6 +95,24 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         checkPhoneNumber();
     }
 
+    private void addCoins(String uid, String reason) {
+        DatabaseReference referenceToUser = FirebaseDatabase.getInstance().getReference().child("Users");
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MMM dd");
+        String time = format.format(calendar.getTime());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("description", reason);
+        String amount = "100";
+        map.put("change", "+" + 100);
+        map.put("amount", amount);
+        referenceToUser.child(uid).child("konfettiView").setValue(true);
+        referenceToUser.child(uid).child("rewards").setValue(amount);
+        map.put("time", time);
+        new SendNotification().updateNotificationCount(uid, reason, "3");
+        new GetCount().updateNotificationcount("4", uid);
+        referenceToUser.child(uid).child("coin_history").push().updateChildren(map);
+    }
+
     private void checkPhoneNumber() {
         generate_otp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +140,30 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         if (!mainActivity) {
             FirebaseAuth mauth = FirebaseAuth.getInstance();
             new SendNotification().updateNotificationCount(mauth.getCurrentUser().getUid(), GlobalVariable.welcomemessage);
+            addCoins(mauth.getUid(), "Congrats 100 coins is added into your wallet as welcome coins you can use it on your next shopping from us.");
+            referandEarn();
         }
+    }
+
+    private void referandEarn() {
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        if (pendingDynamicLinkData != null) {
+                            Uri deepLink = pendingDynamicLinkData.getLink();
+                            String id = deepLink.getQueryParameter("id");
+                            addCoins(id, "Congrats 100 coins is added into your wallet for your referral you can use it on your next shopping from us.");
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(VerifyPhoneNumberActivity.this, "On Faliure", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void setverify() {
@@ -136,21 +187,4 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
                 TaskExecutors.MAIN_THREAD,
                 mCallbacks);
     }
-
-//    private void sendCoins() {
-//        cUserDataRef = FirebaseDatabase.getInstance().getReference().child("Users").child(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
-//        HashMap<String, Object> map = new HashMap<>();
-//        Calendar calendar = Calendar.getInstance();
-//        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MMM dd");
-//        String time = format.format(calendar.getTime());
-//        map.put("description", "Congratulations! Free 100 Welcome Coins Credited. Enjoy Shopping.");
-//        map.put("change", "+" + 100);
-//        map.put("amount","100");
-//        String msg = "Congrats " + 100 + " coins has been added into your personal sathi4shopping wallet you can use it on your next shopping from us.";
-//        cUserDataRef.child("konfettiView").setValue(true);
-//        cUserDataRef.child("rewards").setValue("100");
-//        //  new SendNotification().updateNotificationCount("", msg,"3");
-//        cUserDataRef.child("coin_history").push().updateChildren(map);
-//    }
-
 }

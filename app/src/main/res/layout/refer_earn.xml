@@ -18,15 +18,6 @@
             android:src="@drawable/ic_left_arrow2"
             tools:ignore="ContentDescription" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:background="@drawable/backgroundbutton"
-            android:onClick="refer"
-            android:text="Refer And Get Free 100 Coins"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,5 +45,14 @@
             android:textColor="@android:color/secondary_text_light"
             android:textSize="14sp" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/backgroundbutton"
+            android:onClick="refer"
+            android:text="Refer And Get Free 100 Coins"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
     </LinearLayout>
 </ScrollView>

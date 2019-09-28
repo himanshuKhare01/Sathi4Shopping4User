@@ -83,7 +83,7 @@ public class GetCount {
         });
     }
 
-    void updateNotificationcount(final String fragment, final String uid) {
+    public void updateNotificationcount(final String fragment, final String uid) {
         userDataBaseRef.child(uid).child(fragment).child("count").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

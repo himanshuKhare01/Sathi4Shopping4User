@@ -48,16 +48,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="s4s.page.link"
-                    android:scheme="https" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name=".MainActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -70,7 +60,18 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".Activity.VerifyPhoneNumberActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="s4s.page.link"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
