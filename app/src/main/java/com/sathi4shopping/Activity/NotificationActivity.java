@@ -118,7 +118,7 @@ public class NotificationActivity extends AppCompatActivity {
 
             @NonNull
             @Override
-            public NotificationActivity.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                 View view = LayoutInflater.from(NotificationActivity.this).inflate(R.layout.notification_template, viewGroup, false);
                 return new NotificationViewHolder(view);
             }
